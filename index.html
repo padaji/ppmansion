@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>พิมพ์ใบแจ้งหนี้ / ใบเสร็จรับเงิน</title>
+  <!-- Google Fonts: Inter & Sarabun for professional Thai-English typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- CSS Stylesheet -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Main App Layout (Hidden when printing) -->
+  <div class="app-container no-print">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="app-logo">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="logo-icon"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+          <span class="app-name">DormManager</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button class="nav-item active" data-target="dashboard-section">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          แดชบอร์ด
+        </button>
+        <button class="nav-item" data-target="rooms-section">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M3 7V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2"/><path d="M19 17v4"/><path d="M19 11v2"/><path d="M5 11v10"/><path d="M9 11v10"/><path d="M13 11v10"/><path d="M5 7h14"/></svg>
+          จัดการค่าห้องพัก
+        </button>
+        <button class="nav-item" data-target="quick-meter-section">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          จดมิเตอร์ด่วน
+        </button>
+        <button class="nav-item" data-target="settings-section">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+          ตั้งค่า & สำรองข้อมูล
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="dorm-info-preview">
+          <p class="lbl">หอพักที่กำลังจัดการ</p>
+          <p class="val" id="sidebar-dorm-name">หอพักแสนสุข</p>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Bar -->
+      <header class="topbar">
+        <div class="page-title-area">
+          <h1 id="page-title">แดชบอร์ดสรุปรายเดือน</h1>
+          <span class="sub" id="current-month-display">ประจำเดือน กรกฎาคม 2026</span>
+        </div>
+
+        <div class="topbar-actions">
+          <!-- Month Picker -->
+          <div class="input-group-horizontal">
+            <label for="billing-cycle-select">รอบเดือนเรียกเก็บ:</label>
+            <input type="month" id="billing-cycle-select" class="form-control">
+            <button class="btn btn-primary" id="btn-next-month" title="เริ่มรอบบิลสำหรับเดือนถัดไป" style="white-space: nowrap;">เริ่มเดือนใหม่ ➔</button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Dashboard View -->
+      <section id="dashboard-section" class="content-section active">
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon icon-blue">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9Z"/><path d="M3 9V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v4"/><circle cx="12" cy="14" r="2"/></svg>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">ห้องทั้งหมด</span>
+              <span class="stat-value">75 ห้อง</span>
+              <span class="stat-desc">5 ชั้น ชั้นละ 15 ห้อง</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-gray">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">ยังไม่สร้างบิล</span>
+              <span class="stat-value" id="stat-unbilled">75 ห้อง</span>
+              <span class="stat-desc">ต้องบันทึกค่าใช้จ่าย</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-yellow">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">ค้างจ่ายบิล</span>
+              <span class="stat-value" id="stat-pending">0 ห้อง</span>
+              <span class="stat-desc" id="stat-pending-amount">0.00 บาท</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon icon-green">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">จ่ายเงินแล้ว</span>
+              <span class="stat-value" id="stat-paid">0 ห้อง</span>
+              <span class="stat-desc" id="stat-paid-amount">0.00 บาท</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dashboard Charts & Quick Actions -->
+        <div class="dashboard-details">
+          <div class="panel-card main-summary">
+            <h3>สรุปรายรับรอบบิลนี้</h3>
+            <div class="progress-bar-container">
+              <div class="progress-bar-label">
+                <span>ความคืบหน้าการเรียกเก็บเงิน</span>
+                <span id="billing-progress-percent">0%</span>
+              </div>
+              <div class="progress-track">
+                <div id="billing-progress-bar" class="progress-fill" style="width: 0%"></div>
+              </div>
+            </div>
+
+            <div class="revenue-summary-row">
+              <div class="rev-item">
+                <span class="lbl">ยอดเรียกเก็บทั้งหมด</span>
+                <span class="val text-blue" id="total-billed-revenue">0.00 ฿</span>
+              </div>
+              <div class="rev-item">
+                <span class="lbl">รับเงินแล้ว</span>
+                <span class="val text-green" id="collected-revenue">0.00 ฿</span>
+              </div>
+              <div class="rev-item">
+                <span class="lbl">คงเหลือรอรับ</span>
+                <span class="val text-yellow" id="remaining-revenue">0.00 ฿</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card quick-actions">
+            <h3>เมนูด่วน</h3>
+            <div class="action-buttons-grid">
+              <button class="btn btn-primary btn-icon" id="quick-go-billing">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                บันทึกค่าเช่ารายห้อง
+              </button>
+              <button class="btn btn-secondary btn-icon" id="quick-print-all-unpaid">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+                พิมพ์บิลค้างจ่ายทั้งหมด
+              </button>
+              <button class="btn btn-outline btn-icon" id="quick-export-data">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                ส่งออกข้อมูลสำรอง
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Monthly Detailed Financial Breakdown & Estimation -->
+        <div class="panel-card" style="margin-top: 24px;">
+          <h3 style="border-left: 4px solid var(--primary); padding-left: 10px; margin-bottom: 16px;">รายงานรายรับประจำรอบบิล (แยกตามสัดส่วน)</h3>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+            <!-- Column 1: Billed Breakdown (ยอดเงินที่บันทึกบิลแล้ว) -->
+            <div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <span style="display: inline-block; width: 8px; height: 8px; background-color: var(--primary); border-radius: 50%;"></span>
+                รายรับแยกตามจริง (เฉพาะห้องที่ลงบิลแล้ว)
+              </h4>
+              <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ค่าเช่าห้องพักรวม</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-billed-rent">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ค่าบริการส่วนกลางรวม</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-billed-common">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ค่าน้ำประปารวม</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-billed-water">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ค่าไฟฟ้าประปารวม</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-billed-elec">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ค่าบริการอื่น ๆ รวม</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-billed-custom">0.00 ฿</td></tr>
+                <tr style="border-top: 2px solid var(--primary);"><td style="padding: 10px 0; font-weight: 700; color: var(--primary);">ยอดรวมเรียกเก็บในระบบ</td><td style="text-align: right; font-weight: 700; font-size: 15px; color: var(--primary);" id="sum-billed-total">0.00 ฿</td></tr>
+              </table>
+            </div>
+            
+            <!-- Column 2: Floor Breakdown (รายรับแยกตามชั้น) -->
+            <div>
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--success); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                <span style="display: inline-block; width: 8px; height: 8px; background-color: var(--success); border-radius: 50%;"></span>
+                รายรับแยกตามรายชั้น (เฉพาะห้องที่ลงบิลแล้ว)
+              </h4>
+              <table style="width: 100%; border-collapse: collapse; font-size: 13.5px;">
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ชั้นที่ 1</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-floor-1">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ชั้นที่ 2</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-floor-2">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ชั้นที่ 3</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-floor-3">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ชั้นที่ 4</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-floor-4">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">ชั้นที่ 5</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-floor-5">0.00 ฿</td></tr>
+                <tr style="border-bottom: 1px solid var(--gray-200);"><td style="padding: 8px 0; color: var(--gray-600);">อื่น ๆ (ที่จอดรถ/บริการเสริม)</td><td style="text-align: right; font-weight: 700; color: var(--gray-900);" id="sum-floor-other">0.00 ฿</td></tr>
+                <tr style="border-top: 2px solid var(--success);"><td style="padding: 10px 0; font-weight: 700; color: var(--success);">ยอดรวมรายรับทุกชั้น</td><td style="text-align: right; font-weight: 700; font-size: 15px; color: var(--success);" id="sum-floor-total">0.00 ฿</td></tr>
+              </table>
+              <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px; font-style: italic;">* หมายเหตุ: ยอดรวมทุกชั้นจะเท่ากับยอดรวมที่เรียกเก็บจริงในระบบที่แสดงในตารางฝั่งซ้าย</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Rooms Grid Section -->
+      <section id="rooms-section" class="content-section">
+        <div class="section-filter-bar">
+          <!-- Floor Filters -->
+          <div class="floor-selector">
+            <button class="floor-btn active" data-floor="all">ทั้งหมด</button>
+            <button class="floor-btn" data-floor="1">ชั้น 1</button>
+            <button class="floor-btn" data-floor="2">ชั้น 2</button>
+            <button class="floor-btn" data-floor="3">ชั้น 3</button>
+            <button class="floor-btn" data-floor="4">ชั้น 4</button>
+            <button class="floor-btn" data-floor="5">ชั้น 5</button>
+            <button class="floor-btn" data-floor="other">อื่น ๆ (บริการ/จอดรถ)</button>
+          </div>
+
+          <!-- Status Filters -->
+          <div class="status-selector">
+            <label for="status-filter">สถานะ:</label>
+            <select id="status-filter" class="form-control-sm">
+              <option value="all">ทั้งหมด</option>
+              <option value="unbilled">ยังไม่บันทึกบิล</option>
+              <option value="pending">ค้างชำระ</option>
+              <option value="paid">จ่ายเงินแล้ว</option>
+            </select>
+          </div>
+
+          <div class="search-box">
+            <input type="text" id="search-room-input" placeholder="ค้นหาเลขห้อง... (เช่น 101)" class="form-control-sm">
+          </div>
+        </div>
+
+        <!-- Quick Rates Setting Bar for the active month -->
+        <div class="panel-card quick-rate-bar" style="margin-bottom: 24px; padding: 16px; display: flex; gap: 16px; align-items: center; justify-content: space-between; flex-wrap: wrap;">
+          <div style="font-weight: 700; font-size: 14.5px; color: var(--gray-800); display: flex; align-items: center; gap: 8px;">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            ตั้งราคาของรอบบิลนี้ (ทุกห้อง):
+          </div>
+          <div style="display: flex; gap: 16px; flex-wrap: wrap; flex-grow: 1; justify-content: flex-end;">
+            <div class="input-group-horizontal" style="gap: 6px;">
+              <span style="font-size: 13.5px; color: var(--gray-600);">ค่าเช่าหลัก:</span>
+              <input type="number" id="quick-rent-rate" class="form-control-sm" style="width: 90px;" min="0" placeholder="ค่าเช่า">
+              <span style="font-size: 13.5px; color: var(--gray-500);">฿</span>
+            </div>
+            <div class="input-group-horizontal" style="gap: 6px;">
+              <span style="font-size: 13.5px; color: var(--gray-600);">ค่าส่วนกลาง:</span>
+              <input type="number" id="quick-common-rate" class="form-control-sm" style="width: 80px;" min="0" placeholder="ส่วนกลาง">
+              <span style="font-size: 13.5px; color: var(--gray-500);">฿</span>
+            </div>
+            <div class="input-group-horizontal" style="gap: 6px;">
+              <span style="font-size: 13.5px; color: var(--gray-600);">ค่าน้ำ/หน่วย:</span>
+              <input type="number" id="quick-water-rate" class="form-control-sm" style="width: 70px;" min="0" step="0.5" placeholder="ค่าน้ำ">
+              <span style="font-size: 13.5px; color: var(--gray-500);">฿</span>
+            </div>
+            <div class="input-group-horizontal" style="gap: 6px;">
+              <span style="font-size: 13.5px; color: var(--gray-600);">ค่าไฟ/หน่วย:</span>
+              <input type="number" id="quick-elec-rate" class="form-control-sm" style="width: 70px;" min="0" step="0.5" placeholder="ค่าไฟ">
+              <span style="font-size: 13.5px; color: var(--gray-500);">฿</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Room Cards Grid -->
+        <div class="room-grid" id="room-cards-grid">
+          <!-- Rooms will be dynamically generated by JS -->
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section id="settings-section" class="content-section">
+        <div class="settings-layout">
+          <!-- Rates Config -->
+          <div class="panel-card config-panel">
+            <h3>ตั้งค่าราคา & อัตราค่าน้ำค่าไฟเริ่มต้น</h3>
+            <p class="section-desc">ค่าเริ่มต้นตรงนี้จะใช้เพื่อกรอกข้อมูลอัตโนมัติเมื่อเพิ่มบิลห้องใหม่ แต่คุณยังสามารถแก้ไขค่าเหล่านี้เป็นรายห้องเฉพาะบางเดือนได้</p>
+            
+            <form id="settings-form">
+              <div class="form-grid">
+                <div class="input-group">
+                  <label for="cfg-dorm-name">ชื่อหอพัก / ผู้เรียกเก็บเงิน</label>
+                  <input type="text" id="cfg-dorm-name" class="form-control" placeholder="ชื่อหอพัก..." required>
+                </div>
+                
+                <div class="input-group">
+                  <label for="cfg-dorm-phone">เบอร์โทรศัพท์ติดต่อ</label>
+                  <input type="text" id="cfg-dorm-phone" class="form-control" placeholder="08x-xxxxxxx">
+                </div>
+
+                <div class="input-group span-2">
+                  <label for="cfg-dorm-address">ที่อยู่หอพัก (ที่แสดงในบิล)</label>
+                  <input type="text" id="cfg-dorm-address" class="form-control" placeholder="ระบุที่อยู่ของหอพัก...">
+                </div>
+
+                <div class="input-group span-2">
+                  <label for="cfg-dorm-payment">ข้อมูลบัญชี/พร้อมเพย์ (แสดงในบิล)</label>
+                  <input type="text" id="cfg-dorm-payment" class="form-control" placeholder="เช่น พร้อมเพย์ 089-999-9999 หรือ บัญชีกสิกรไทย 123-4-56789-0 นายสมชาย">
+                </div>
+
+                <div class="input-group span-2">
+                  <label for="cfg-dorm-qr">อัปโหลดรูปภาพ QR Code ชำระเงิน (จะแสดงในบิลคู่กับบัญชี)</label>
+                  <input type="file" id="cfg-dorm-qr" class="form-control" accept="image/*">
+                  <div style="margin-top: 8px; display: flex; align-items: center; gap: 12px;">
+                    <img id="cfg-dorm-qr-preview" src="" style="max-height: 80px; max-width: 80px; display: none; border: 1px solid var(--gray-300); border-radius: 4px; padding: 2px; object-fit: contain;">
+                    <button type="button" class="btn btn-sm btn-danger" id="btn-clear-qr" style="display: none;">ลบรูป QR Code</button>
+                  </div>
+                </div>
+
+                <div class="input-group">
+                  <label for="cfg-default-rent">ค่าเช่าห้องพักเริ่มต้น (บาท/เดือน)</label>
+                  <input type="number" id="cfg-default-rent" class="form-control" min="0" step="100" required>
+                </div>
+
+                <div class="input-group">
+                  <label for="cfg-default-common">ค่าบริการส่วนกลางเริ่มต้น (บาท/เดือน)</label>
+                  <input type="number" id="cfg-default-common" class="form-control" min="0" step="10" required>
+                </div>
+
+                <div class="input-group">
+                  <label for="cfg-water-rate">อัตราค่าน้ำประปา (บาท / หน่วย)</label>
+                  <input type="number" id="cfg-water-rate" class="form-control" min="0" step="0.5" required>
+                </div>
+
+                <div class="input-group">
+                  <label for="cfg-electricity-rate">อัตราค่าไฟฟ้า (บาท / หน่วย)</label>
+                  <input type="number" id="cfg-electricity-rate" class="form-control" min="0" step="0.5" required>
+                </div>
+              </div>
+
+              <div class="form-actions">
+                <button type="submit" class="btn btn-primary">บันทึกค่าเริ่มต้น</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Backup Restore Panel -->
+          <div class="panel-card backup-panel">
+            <h3>การสำรองและย้ายข้อมูล</h3>
+            <p class="section-desc">เนื่องจากข้อมูลถูกเก็บไว้ในบราวเซอร์เครื่องนี้ คุณควรดาวน์โหลดไฟล์สำรองข้อมูลเก็บไว้เป็นประจำเพื่อป้องกันข้อมูลสูญหาย หรือเมื่อต้องการย้ายไปใช้กับเครื่องอื่น</p>
+            
+            <div class="backup-actions">
+              <button class="btn btn-success btn-icon" id="btn-export-json">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                สำรองข้อมูล (Export JSON)
+              </button>
+              
+              <div class="file-upload-wrapper">
+                <button class="btn btn-outline btn-icon" type="button" onclick="document.getElementById('import-file-input').click()">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" x2="12" y1="3" y2="15"/></svg>
+                  นำเข้าข้อมูลเก่า (Import JSON)
+                </button>
+                <input type="file" id="import-file-input" style="display: none;" accept=".json">
+              </div>
+            </div>
+
+            <div class="danger-zone">
+              <h4>เขตอันตราย</h4>
+              <p class="section-desc">การกระทำนี้จะลบประวัติการทำบิลและข้อมูลทั้งหมดออกจากระบบ และเริ่มใหม่ทั้งหมด ไม่สามารถกู้คืนได้เว้นแต่คุณจะมีไฟล์สำรอง</p>
+              <button class="btn btn-danger" id="btn-reset-system">ล้างข้อมูลระบบทั้งหมด</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: QUICK METER ENTRY -->
+      <section id="quick-meter-section" class="content-section">
+        <div class="panel-card" style="margin-bottom: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 20px;">
+            <div>
+              <h3 style="margin-bottom: 4px; border-left: 4px solid var(--primary); padding-left: 10px;">จดมิเตอร์ด่วน (ตามใบจด)</h3>
+              <p style="font-size: 13px; color: var(--text-muted);">กรอกเลขจดมิเตอร์ล่าสุดทั้งหมดในหน้านี้ แล้วกดบันทึกพร้อมกันครั้งเดียว</p>
+            </div>
+            
+            <div style="display: flex; gap: 12px; align-items: center;">
+              <div class="status-radio-group" style="padding: 2px;">
+                <label class="status-radio" style="cursor: pointer;">
+                  <input type="radio" name="quick-meter-utility" value="water" checked>
+                  <span style="padding: 6px 12px; font-size: 13px;">มิเตอร์น้ำประปา</span>
+                </label>
+                <label class="status-radio" style="cursor: pointer;">
+                  <input type="radio" name="quick-meter-utility" value="elec">
+                  <span style="padding: 6px 12px; font-size: 13px;">มิเตอร์ไฟฟ้า</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Entry Sheet Grid Container -->
+          <div id="quick-meter-grid-container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 20px;">
+            <!-- Rendered programmatically -->
+          </div>
+          
+          <div style="display: flex; justify-content: flex-end; align-items: center; margin-top: 24px; gap: 16px;">
+            <span id="quick-meter-status-msg" style="font-size: 13.5px; color: var(--success); font-weight: 600;"></span>
+            <button class="btn btn-primary" id="btn-save-quick-meters">
+              บันทึกมิเตอร์ทั้งหมด
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Billing Form (Pop-up when clicking on a Room card) (Hidden when printing) -->
+  <div class="modal-backdrop no-print" id="billing-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h2 id="billing-modal-title">บันทึกบิลห้อง 101</h2>
+        <button class="close-btn" id="close-billing-modal-btn">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="billing-entry-form">
+          <!-- Room and Period Info -->
+          <div class="billing-info-strip">
+            <div><strong>ห้อง:</strong> <span id="bill-room-no">101</span></div>
+            <div><strong>ประจำรอบเดือน:</strong> <span id="bill-month-cycle">กรกฎาคม 2026</span></div>
+          </div>
+
+          <!-- Tenant Name & Address Input -->
+          <div class="modal-section" style="padding-bottom: 12px; margin-bottom: 12px;">
+            <div class="form-grid-2">
+              <div class="input-group">
+                <label for="bill-tenant-input" style="font-weight: 700;">ชื่อผู้เช่า (Tenant Name)</label>
+                <input type="text" id="bill-tenant-input" class="form-control" placeholder="กรอกชื่อผู้เช่า... (เช่น นายสมชาย)">
+              </div>
+              <div class="input-group">
+                <label for="bill-address-input" style="font-weight: 700;">ที่อยู่ผู้เช่า (Tenant Address)</label>
+                <input type="text" id="bill-address-input" class="form-control" placeholder="ระบุที่อยู่จัดส่งเอกสาร... (ถ้ามี)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Room Type Selection -->
+          <div class="modal-section" style="padding-bottom: 12px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color);">
+            <div class="input-group">
+              <label style="font-weight: 700; margin-bottom: 8px;">ประเภทห้องพัก (Room Type)</label>
+              <div class="status-radio-group">
+                <label class="status-radio" style="flex: 1; cursor: pointer;">
+                  <input type="radio" name="room-type-toggle" value="normal" checked>
+                  <span style="padding: 8px; font-size: 13px;">ห้องปกติ (Normal Room)</span>
+                </label>
+                <label class="status-radio" style="flex: 1; cursor: pointer;">
+                  <input type="radio" name="room-type-toggle" value="special">
+                  <span style="padding: 8px; font-size: 13px;">ห้องพิเศษ (Special Room)</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Basic Room Charge & Common Fee -->
+          <div class="modal-section">
+            <h3 class="section-title">ค่าเช่าหลัก & ค่าส่วนกลาง</h3>
+            <div class="form-grid-2">
+              <div class="input-group">
+                <label for="bill-rent-input">ค่าเช่าห้องพัก (บาท)</label>
+                <input type="number" id="bill-rent-input" class="form-control" required min="0">
+              </div>
+              <div class="input-group">
+                <label for="bill-common-input">ค่าบริการส่วนกลาง (บาท)</label>
+                <input type="number" id="bill-common-input" class="form-control" required min="0">
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Water Billing (Meter) -->
+          <div class="modal-section">
+            <div class="section-header-title">
+              <h3 class="section-title">ค่าน้ำประปา</h3>
+              <span class="calc-formula" id="water-calc-summary">0 หน่วย × 18 ฿ = 0.00 ฿</span>
+            </div>
+            <div class="form-grid-3">
+              <div class="input-group">
+                <label for="bill-water-prev">เลขจดครั้งก่อน</label>
+                <input type="number" id="bill-water-prev" class="form-control" required min="0">
+              </div>
+              <div class="input-group">
+                <label for="bill-water-curr">เลขจดครั้งนี้</label>
+                <input type="number" id="bill-water-curr" class="form-control" required min="0" placeholder="กรอกเลขมิเตอร์ล่าสุด">
+              </div>
+              <div class="input-group">
+                <label for="bill-water-rate">อัตราต่อหน่วย (บาท)</label>
+                <input type="number" id="bill-water-rate" class="form-control" required min="0" step="0.5">
+              </div>
+            </div>
+            <!-- Special Room Water Config (Only visible for special rooms) -->
+            <div class="special-room-config" id="water-special-config" style="display: none; margin-top: 12px; padding: 12px; background-color: var(--gray-50); border-radius: var(--border-radius-sm); border: 1px dashed var(--gray-300);">
+              <div class="form-grid-2">
+                <div class="input-group">
+                  <label for="bill-water-min-units" style="font-size: 11.5px; font-weight: 600;">ค่าน้ำขั้นต่ำคิดยูนิต (หน่วย)</label>
+                  <input type="number" id="bill-water-min-units" class="form-control-sm" placeholder="เช่น 5" min="0">
+                </div>
+                <div class="input-group">
+                  <label for="bill-water-min-amount" style="font-size: 11.5px; font-weight: 600;">หรือคิดขั้นต่ำเหมาจ่าย (บาท)</label>
+                  <input type="number" id="bill-water-min-amount" class="form-control-sm" placeholder="เช่น 100" min="0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Electricity Billing (Meter) -->
+          <div class="modal-section">
+            <div class="section-header-title">
+              <h3 class="section-title">ค่าไฟฟ้า</h3>
+              <span class="calc-formula" id="elec-calc-summary">0 หน่วย × 7 ฿ = 0.00 ฿</span>
+            </div>
+            <div class="form-grid-3">
+              <div class="input-group">
+                <label for="bill-elec-prev">เลขจดครั้งก่อน</label>
+                <input type="number" id="bill-elec-prev" class="form-control" required min="0">
+              </div>
+              <div class="input-group">
+                <label for="bill-elec-curr">เลขจดครั้งนี้</label>
+                <input type="number" id="bill-elec-curr" class="form-control" required min="0" placeholder="กรอกเลขมิเตอร์ล่าสุด">
+              </div>
+              <div class="input-group">
+                <label for="bill-elec-rate">อัตราต่อหน่วย (บาท)</label>
+                <input type="number" id="bill-elec-rate" class="form-control" required min="0" step="0.5">
+              </div>
+            </div>
+            <!-- Special Room Elec Config (Only visible for special rooms) -->
+            <div class="special-room-config" id="elec-special-config" style="display: none; margin-top: 12px; padding: 12px; background-color: var(--gray-50); border-radius: var(--border-radius-sm); border: 1px dashed var(--gray-300);">
+              <div class="form-grid-2">
+                <div class="input-group">
+                  <label for="bill-elec-min-units" style="font-size: 11.5px; font-weight: 600;">ค่าไฟขั้นต่ำคิดยูนิต (หน่วย)</label>
+                  <input type="number" id="bill-elec-min-units" class="form-control-sm" placeholder="เช่น 10" min="0">
+                </div>
+                <div class="input-group">
+                  <label for="bill-elec-min-amount" style="font-size: 11.5px; font-weight: 600;">หรือคิดขั้นต่ำเหมาจ่าย (บาท)</label>
+                  <input type="number" id="bill-elec-min-amount" class="form-control-sm" placeholder="เช่น 150" min="0">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Dynamic Custom Items (e.g. Fridge, AC, Damage, etc.) -->
+          <div class="modal-section">
+            <div class="section-header-title">
+              <h3 class="section-title">รายการเพิ่มเติมอื่น ๆ</h3>
+              <button type="button" class="btn btn-sm btn-secondary" id="btn-add-custom-item">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="5" y2="19"/><line x1="5" x2="19" y1="12" y2="12"/></svg>
+                เพิ่มรายการ
+              </button>
+            </div>
+            
+            <div id="custom-items-container" class="custom-items-list">
+              <!-- Custom charge rows will be appended here dynamically -->
+            </div>
+          </div>
+
+          <!-- Section: Total and Payment Status -->
+          <div class="summary-payment-section">
+            <div class="total-display-card">
+              <span class="lbl">ยอดรวมทั้งสิ้น</span>
+              <span class="val" id="bill-total-amount">0.00 บาท</span>
+            </div>
+            
+            <div class="status-toggle-card">
+              <span class="lbl">สถานะการชำระเงิน</span>
+              <div class="status-radio-group">
+                <label class="status-radio unpaid">
+                  <input type="radio" name="payment-status" value="pending" checked>
+                  <span>ค้างชำระ</span>
+                </label>
+                <label class="status-radio paid">
+                  <input type="radio" name="payment-status" value="paid">
+                  <span>ชำระแล้ว</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btn-delete-bill" style="display: none;">ลบบิลนี้</button>
+        <button type="button" class="btn btn-danger" id="btn-delete-custom-room" style="display: none;">ลบบริการนี้ทิ้ง</button>
+        <div style="flex-grow: 1;"></div>
+        <button type="button" class="btn btn-secondary" id="btn-preview-invoice" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+          ใบแจ้งหนี้ / ใบเสร็จ
+        </button>
+        <button type="button" class="btn btn-primary" id="btn-save-bill">บันทึกบิล</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Invoice / Receipt Preview for Print (Hidden when printing, but triggers print template) -->
+  <div class="modal-backdrop no-print" id="invoice-preview-modal">
+    <div class="modal-card modal-lg">
+      <div class="modal-header">
+        <h2>ตัวอย่างใบแจ้งหนี้ / ใบเสร็จรับเงิน</h2>
+        <button class="close-btn" id="close-invoice-modal-btn">&times;</button>
+      </div>
+      <div class="modal-body" style="background-color: var(--bg-body); padding: 20px;">
+        <!-- Simulated Invoice Layout inside modal -->
+        <div class="invoice-box-preview" id="invoice-preview-content">
+          <!-- The JavaScript will render the print content here -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" id="btn-back-to-edit">ย้อนกลับแก้ไข</button>
+        <div style="flex-grow: 1;"></div>
+        <button type="button" class="btn btn-primary btn-icon" id="btn-trigger-print">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+          พิมพ์ใบเสร็จ / บันทึก PDF
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pure Print Template (ONLY visible when printing via @media print) -->
+  <div class="print-invoice-page" id="print-template">
+    <!-- Generated dynamically when window.print() is called -->
+  </div>
+
+  <!-- JS Logic -->
+  <script src="app.js"></script>
+</body>
+</html>
